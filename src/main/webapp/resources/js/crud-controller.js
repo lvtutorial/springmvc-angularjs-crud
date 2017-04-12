@@ -8,15 +8,21 @@ mainApp.controller('AppController', function($scope, AppService) {
 		
 	 
     function getAllCustomers(){
-    	AppService.getCustomers().then(
-    	function (cus) {
-    		//alert(cus.data);
-    		thisCtrl.customers = cus; 
-        }, 
-        function (errResponse) {
-        	console.error(errResponse);
-        	thisCtrl.error = errResponse;
-        });
+    	loadingOverley();
+    	setTimeout(function () {
+	  		// Something you want delayed.			
+	    	AppService.getCustomers().then(
+	    	function (cus) {
+	    		//alert(cus.data);
+	    		thisCtrl.customers = cus; 
+	    		removeLoading();
+	        }, 
+	        function (errResponse) {
+	        	console.error(errResponse);
+	        	thisCtrl.error = errResponse;
+	        	removeLoading();
+	        });
+    	}, 3000);
     }
     
     function actionCustomer(customer, action){
@@ -73,4 +79,22 @@ mainApp.controller('AppController', function($scope, AppService) {
 		thisCtrl.customer={id:null, username:'', fullname:'', email:''};
 		$scope.myForm.$setPristine(); //reset Form
 	}
+       
+    function loadingOverley() {
+    	
+    	/*setTimeout(function () {
+	  		// Something you want delayed.			
+	  	}, 3000);
+    	*/
+    	var over = '<div id="overlay">' +
+        // '<img id="loading" src="...">' +
+ 			'<span id="loading">Loading</span>' +
+             '</div>';
+         $(over).appendTo('body');
+    		
+    }
+	function removeLoading() {	
+		$('#overlay').remove();
+	}
+   
 });
